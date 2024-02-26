@@ -1,6 +1,8 @@
 import "package:flutter/Material.dart";
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:world_time/services/world_time.dart';
+import 'package:provider/provider.dart';
+import 'package:world_time/services/location_provider.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -16,13 +18,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void setupWorldTime() async {
     WorldTime instance = WorldTime(location: "Berlin", flag: "berlin.png", url: "Europe/Berlin");
     await instance.getTime();
-    Map dataToBeSent =  {
-      'location': instance.location,
-      'flag': instance.flag,
-      'time': instance.time,
-      'isDayTime': instance.isDayTime,
-    };
-    Navigator.pushNamed(context, '/home', arguments: dataToBeSent,);
+    context.read<LocationProvider>().changeLocation(
+      location: instance.location,
+      flag: instance.flag,
+      time: instance.time,
+      isDayTime: instance.isDayTime,);
+    Navigator.pushNamed(context, '/home');
   }
   @override
   void initState(){

@@ -1,5 +1,7 @@
 import "package:flutter/Material.dart";
 import "package:world_time/services/world_time.dart";
+import 'package:provider/provider.dart';
+import 'package:world_time/services/location_provider.dart';
 
 class ChooseLocation extends StatefulWidget {
   const ChooseLocation({super.key});
@@ -26,13 +28,14 @@ class _ChooseLocationState extends State<ChooseLocation> {
     //Capturing the context to avoid its being changed after the following line getTime execution
     BuildContext capturedContext = context;
     await instance.getTime();
+    capturedContext.read<LocationProvider>().changeLocation(
+      location: instance.location,
+      flag: instance.flag,
+      time: instance.time,
+      isDayTime: instance.isDayTime,
+    );
     // navigate back to home screen
-    Navigator.pop(capturedContext, {
-      'location': instance.location,
-      'flag': instance.flag,
-      'time': instance.time,
-      'isDayTime': instance.isDayTime,
-    });
+    Navigator.pop(capturedContext);
   }
 
   @override
